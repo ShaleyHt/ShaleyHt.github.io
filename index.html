@@ -6,8 +6,14 @@
 </head>
 <body>
   <div id="message" class="message"></div>
+
+  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  <div id="profile-info" style="display: none;">
+    <h2>Please log in to authorize access to YouTube data.</h2>
+    <button id="login-link" onclick="signIn()">Log In</button>
+  </div>
   
-  <div class="pre-auth">
+ <div class="pre-auth">
     <h2>Please log in to authorize access to YouTube data.</h2>
     <button id="login-link" onclick="signIn()">Log In</button>
   </div>
