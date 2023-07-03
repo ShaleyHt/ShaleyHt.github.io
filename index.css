@@ -7,7 +7,7 @@ body {
 }
 
 .pre-auth, .post-auth {
-  display: none;
+  display: inline;
 }
 
 #login-link {
