@@ -1,36 +1,88 @@
-
 <!DOCTYPE html>
 <html>
-<head>
-  <title>YouTube Analytics</title>
-  <link rel="stylesheet" type="text/css" href="index.css">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>YouTube Analytics API Example</title>
+    
+ 
   <meta name="google-signin-client_id" content="798320205040-pup98j8j44bjptrtdrotaf75bkekq954.apps.googleusercontent.com">
-</head>
-<body>
-  <div id="message" class="message"></div>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .g-signin2 {
+      margin-top: 20px;
+    }
+  </style>
+ </head>
+  <body>
+    <h1>YouTube Analytics</h1>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <div class="post-auth" style="display: none;">
+      <div id="message"></div>
+      <div id="chart"></div>
+      <div>Choose a Video:</div>
+      <ul id="video-list"></ul>
+    </div>
 
-  <div class="g-signin2" data-onsuccess="onSignIn"></div>
-  <div id="profile-info" style="display: none;">
-    <h2>Please log in to authorize access to YouTube data.</h2>
-    <button id="login-link" onclick="signIn()">Log In</button>
-  </div>
-  
- <div class="pre-auth">
-    <h2>Please log in to authorize access to YouTube data.</h2>
-    <button id="login-link" onclick="signIn()">Log In</button>
-  </div>
-  
-  <div class="post-auth">
-    <h2>Your YouTube Channel Videos</h2>
-    <ul id="video-list"></ul>
-  </div>
-  
-  <div id="chart"></div>
-  
-  <script src="https://www.google.com/jsapi"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-  <script src="index.js"></script>
-  <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=onJSClientLoad"></script>
-</body>
+    
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//www.google.com/jsapi"></script>
+    
+    <script src="https://apis.google.com/js/client.js?onload=onSignIn"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+      // Retrieve your client ID from the Google API Console at
+// https://console.cloud.google.com/.
+var OAUTH2_CLIENT_ID = '798320205040-pup98j8j44bjptrtdrotaf75bkekq954.apps.googleusercontent.com';
+var OAUTH2_SCOPES = [
+  'https://www.googleapis.com/auth/yt-analytics.readonly',
+  'https://www.googleapis.com/auth/youtube.readonly'
+];
+
+function onSignIn() {
+  gapi.auth.init(function() {
+    window.setTimeout(checkAuth, 1);
+  });
+}
+
+function checkAuth() {
+  gapi.auth.authorize({
+    client_id: OAUTH2_CLIENT_ID,
+    scope: OAUTH2_SCOPES,
+    immediate: true
+  }, handleAuthResult);
+}
+
+function handleAuthResult(authResult) {
+  if (authResult) {
+    $('.pre-auth').hide();
+    $('.post-auth').show();
+    loadAPIClientInterfaces();
+  } else {
+    $('.post-auth').hide();
+    $('.pre-auth').show();
+    $('#login-link').click(function() {
+      gapi.auth.authorize({
+        client_id: OAUTH2_CLIENT_ID,
+        scope: OAUTH2_SCOPES,
+        immediate: false
+      }, handleAuthResult);
+    });
+  }
+}
+
+function displayMessage(message) {
+  $('#message').text(message).show();
+}
+
+function hideMessage() {
+  $('#message').hide();
+}
+
+    </script>
+
+  </body>
+
 </html>
-
