@@ -19,7 +19,7 @@
 
   // Upon loading, the Google APIs JS client automatically invokes this callback.
   // See https://developers.google.com/api-client-library/javascript/features/authentication 
-  window.onJSClientLoad = function() {
+  window.onSignIn = function() {
     gapi.auth.init(function() {
       window.setTimeout(checkAuth, 1);
     });
