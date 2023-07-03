@@ -54,7 +54,7 @@
   // Upon signing in, the `onSignIn` function will be invoked.
   function onSignIn() {
     gapi.auth.init(function() {
-      window.setTimeout(checkAuth, 1);
+      window.setTimeout(checkAuth, 0);
     });
   }
 
