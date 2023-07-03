@@ -33,54 +33,14 @@
     <script src="https://apis.google.com/js/client.js?onload=onSignIn"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
-      // Retrieve your client ID from the Google API Console at
-// https://console.cloud.google.com/.
-var OAUTH2_CLIENT_ID = '798320205040-pup98j8j44bjptrtdrotaf75bkekq954.apps.googleusercontent.com';
-var OAUTH2_SCOPES = [
-  'https://www.googleapis.com/auth/yt-analytics.readonly',
-  'https://www.googleapis.com/auth/youtube.readonly'
-];
-
-function onSignIn() {
-  gapi.auth.init(function() {
-    window.setTimeout(checkAuth, 1);
-  });
-}
-
-function checkAuth() {
-  gapi.auth.authorize({
-    client_id: OAUTH2_CLIENT_ID,
-    scope: OAUTH2_SCOPES,
-    immediate: true
-  }, handleAuthResult);
-}
-
-function handleAuthResult(authResult) {
-  if (authResult) {
-    $('.pre-auth').hide();
-    $('.post-auth').show();
-    loadAPIClientInterfaces();
-  } else {
-    $('.post-auth').hide();
-    $('.pre-auth').show();
-    $('#login-link').click(function() {
-      gapi.auth.authorize({
-        client_id: OAUTH2_CLIENT_ID,
-        scope: OAUTH2_SCOPES,
-        immediate: false
-      }, handleAuthResult);
-    });
-  }
-}
-
-function displayMessage(message) {
-  $('#message').text(message).show();
-}
-
-function hideMessage() {
-  $('#message').hide();
-}
-      
+     (function() {
+  // Retrieve your client ID from the Google API Console at
+  // https://console.cloud.google.com/.
+  var OAUTH2_CLIENT_ID = '798320205040-pup98j8j44bjptrtdrotaf75bkekq954.apps.googleusercontent.com';
+  var OAUTH2_SCOPES = [
+    'https://www.googleapis.com/auth/yt-analytics.readonly',
+    'https://www.googleapis.com/auth/youtube.readonly'
+  ];
 
   var ONE_MONTH_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 30;
 
@@ -91,7 +51,53 @@ function hideMessage() {
   // https://developers.google.com/chart/interactive/docs/quick_start
   google.load('visualization', '1.0', {'packages': ['corechart']});
 
+  // Upon signing in, the `onSignIn` function will be invoked.
+  function onSignIn() {
+    gapi.auth.init(function() {
+      window.setTimeout(checkAuth, 1);
+    });
+  }
 
+  // Attempt the immediate OAuth 2.0 client flow as soon as the page loads.
+  // If the currently logged-in Google Account has previously authorized
+  // the client specified as the OAUTH2_CLIENT_ID, then the authorization
+  // succeeds with no user intervention. Otherwise, it fails and the
+  // user interface that prompts for authorization needs to display.
+  function checkAuth() {
+    gapi.auth.authorize({
+      client_id: OAUTH2_CLIENT_ID,
+      scope: OAUTH2_SCOPES,
+      immediate: true
+    }, handleAuthResult);
+  }
+
+  // Handle the result of a gapi.auth.authorize() call.
+  function handleAuthResult(authResult) {
+    if (authResult) {
+      // Authorization was successful. Hide authorization prompts and show
+      // content that should be visible after authorization succeeds.
+      $('.g-signin2').hide();
+      $('.post-auth').show();
+
+      loadAPIClientInterfaces();
+    } else {
+      // Authorization was unsuccessful. Show content related to prompting for
+      // authorization and hide content that should be visible if authorization
+      // succeeds.
+      $('.post-auth').hide();
+      $('.g-signin2').show();
+
+      // Make the #login-link clickable. Attempt a non-immediate OAuth 2.0
+      // client flow. The current function is called when that flow completes.
+      $('#login-link').click(function() {
+        gapi.auth.authorize({
+          client_id: OAUTH2_CLIENT_ID,
+          scope: OAUTH2_SCOPES,
+          immediate: false
+        }, handleAuthResult);
+      });
+    }
+  }
 
   // Load the client interfaces for the YouTube Analytics and Data APIs, which
   // are required to use the Google APIs JS client. More info is available at
@@ -289,25 +295,21 @@ function hideMessage() {
       // each column's title -- e.g.: [{name:"day"},{name:"views"}]
       // We need these column titles as a simple array, so we call jQuery.map()
       // to get each element's "name" property and create a new array that only
-      // contains those values.
+      // contains these values.
       var columns = $.map(response.columnHeaders, function(item) {
         return item.name;
       });
-      // The google.visualization.arrayToDataTable() function wants an array
-      // of arrays. The first element is an array of column titles, calculated
-      // above as "columns". The remaining elements are arrays that each
-      // represent a row of data. Fortunately, response.rows is already in
-      // this format, so it can just be concatenated.
-      // See https://developers.google.com/chart/interactive/docs/datatables_dataviews#arraytodatatable
-      var chartDataArray = [columns].concat(response.rows);
-      var chartDataTable = google.visualization.arrayToDataTable(chartDataArray);
+      var rows = response.rows;
+      var data = google.visualization.arrayToDataTable([columns].concat(rows));
 
-      var chart = new google.visualization.LineChart(document.getElementById('chart'));
-      chart.draw(chartDataTable, {
-        // Additional options can be set if desired as described at:
-        // https://developers.google.com/chart/interactive/docs/reference#visdraw
-        title: 'Views per Day of Video ' + videoId
-      });
+      var options = {
+        title: 'Views per Day of ' + videoId,
+        hAxis: {title: 'Date', titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0}
+      };
+
+      // Create a new line chart in the div with the specified ID.
+      new google.visualization.LineChart(document.getElementById('chart')).draw(data, options);
     } else {
       displayMessage('No data available for video ' + videoId);
     }
