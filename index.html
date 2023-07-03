@@ -1,23 +1,28 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Google I/O YouTube Codelab</title>
-  <link type="text/css" rel="stylesheet" href="index.css">
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-  <script type="text/javascript" src="//www.google.com/jsapi"></script>
-  <script type="text/javascript" src="index.js"></script>
-  <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=onJSClientLoad"></script>
+  <title>YouTube Analytics</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-  <div id="login-container" class="pre-auth">This application requires access to your YouTube account.
-    Please <a href="#" id="login-link">authorize</a> to continue.
+  <div id="message" class="message"></div>
+  
+  <div class="pre-auth">
+    <h2>Please log in to authorize access to YouTube data.</h2>
+    <button id="login-link">Log In</button>
   </div>
+  
   <div class="post-auth">
-    <div id="message"></div>
-    <div id="chart"></div>
-    <div>Choose a Video:</div>
+    <h2>Your YouTube Channel Videos</h2>
     <ul id="video-list"></ul>
   </div>
+  
+  <div id="chart"></div>
+  
+  <script src="https://www.google.com/jsapi"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="index.js"></script>
+  <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=onJSClientLoad"></script>
 </body>
 </html>
+
