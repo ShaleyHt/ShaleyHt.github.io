@@ -2,9 +2,9 @@
 (function() {
   // Retrieve your client ID from the Google API Console at
   // https://console.cloud.google.com/.
-  var OAUTH2_CLIENT_ID = '798320205040-pup98j8j44bjptrtdrotaf75bkekq954.apps.googleusercontent.com';
+  var OAUTH2_CLIENT_ID = '525322366534-782egu2g0ev730ud66cs3a56bcktr6mm.apps.googleusercontent.com';
   var OAUTH2_SCOPES = [
-    'https://www.googleapis.com/auth/yt-analytics.readonly',
+    'https://www.googleapis.com/auth/yt-analytics-monetary.readonly',
     'https://www.googleapis.com/auth/youtube.readonly'
   ];
 
@@ -19,7 +19,7 @@
 
   // Upon loading, the Google APIs JS client automatically invokes this callback.
   // See https://developers.google.com/api-client-library/javascript/features/authentication 
-  window.onSignIn = function() {
+  window.onJSClientLoad = function() {
     gapi.auth.init(function() {
       window.setTimeout(checkAuth, 1);
     });
