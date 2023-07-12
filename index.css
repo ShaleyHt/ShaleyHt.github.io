@@ -1,25 +1,28 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: Helvetica, sans-serif;
 }
 
-.message {
-  color: red;
+.pre-auth {
+  display: none;
 }
 
-.pre-auth, .post-auth {
-  display: inline;
-}
-
-#login-link {
-  padding: 10px 20px;
-  background-color: #337ab7;
-  color: #fff;
-  border: none;
-  cursor: pointer;
+.post-auth {
+  display: none;
 }
 
 #chart {
-  margin-top: 20px;
-  width: 600px;
-  height: 400px;
+  width: 500px;
+  height: 300px;
+  margin-bottom: 1em;
+}
+
+#video-list {
+  padding-left: 1em;
+  list-style-type: none;
+}
+#video-list > li {
+  cursor: pointer;
+}
+#video-list > li:hover {
+  color: blue;
 }
